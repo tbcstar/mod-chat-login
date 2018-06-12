@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Configuration/Config.h"
 #include "ChannelMgr.h"
+#include "Chat.h"
 
 class LoginChat : public PlayerScript{
 public:
@@ -17,11 +18,19 @@ public:
 
         if (sConfigMgr->GetBoolDefault("LoginChat.enabled", false)) {
 
-            std::string channelName = sConfigMgr->getStringDefault("LoginChat.name", "world");
-            int channelId = sConfigMgr->GetIntDefault("LoginChat.id", 9);
+            ChannelMgr* cMgr = ChannelMgr::forTeam(TEAM_ALLIANCE);
 
-            joinChannel = cMgr->GetJoinChannel(channelName, channelId);
-            joinChannel->JoinChannel(this, ""); 
+            std::string channelName = sConfigMgr->GetStringDefault("LoginChat.name", "world");
+            QueryResult result = CharacterDatabase.PQuery("SELECT channelId FROM channels WHERE name = '%s'", channelName.c_str());
+
+            if (!result) return;
+
+            uint32 channelId = (*result)[0].GetUInt32();
+
+            Channel* joinChannel = cMgr->GetJoinChannel(channelName, channelId);
+
+            joinChannel->JoinChannel(player, "");
+
         }
     }
 };
