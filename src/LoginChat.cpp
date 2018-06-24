@@ -15,23 +15,19 @@ public:
 
     void OnLogin(Player* player) override {
 
+	std::string channelName = sConfigMgr->GetStringDefault("LoginChat.name", "world");
+        QueryResult result = CharacterDatabase.PQuery("SELECT channelId FROM channels WHERE name = '%s'", channelName.c_str());
 
-        if (sConfigMgr->GetBoolDefault("LoginChat.enabled", false)) {
+        if (!result) return;
+        uint32 channelId = (*result)[0].GetUInt32();
 
-            ChannelMgr* cMgr = ChannelMgr::forTeam(TEAM_ALLIANCE);
+    	if (ChannelMgr* cMgr = ChannelMgr::forTeam(player->GetTeamId()))
+    	{
+        	if (Channel* channel = cMgr->GetJoinChannel("world", 9))
+            		channel->JoinChannel(player, "");
+    		cMgr->LoadChannels();
+	}
 
-            std::string channelName = sConfigMgr->GetStringDefault("LoginChat.name", "world");
-            QueryResult result = CharacterDatabase.PQuery("SELECT channelId FROM channels WHERE name = '%s'", channelName.c_str());
-
-            if (!result) return;
-
-            uint32 channelId = (*result)[0].GetUInt32();
-
-            Channel* joinChannel = cMgr->GetJoinChannel(channelName, channelId);
-
-            joinChannel->JoinChannel(player, "");
-
-        }
     }
 };
 
