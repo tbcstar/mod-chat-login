@@ -19,7 +19,6 @@ public:
         QueryResult result = CharacterDatabase.PQuery("SELECT channelId FROM channels WHERE name = '%s'", channelName.c_str());
 
         if (!result) return;
-        uint32 channelId = (*result)[0].GetUInt32();
 
     	if (ChannelMgr* cMgr = ChannelMgr::forTeam(player->GetTeamId()))
     	{
