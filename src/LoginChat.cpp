@@ -30,31 +30,7 @@ public:
     }
 };
 
-class login_chat_conf : public WorldScript
-{
-public:
-    login_chat_conf() : WorldScript("login_chat_conf") { }
-
-    void OnBeforeConfigLoad(bool reload) override
-    {
-        if (!reload) {
-            std::string conf_path = _CONF_DIR;
-            std::string cfg_file = conf_path + "/login_chat.conf";
-#ifdef WIN32
-            cfg_file = "reward_shop.conf";
-#endif
-            std::string cfg_def_file = cfg_file + ".dist";
-
-            sConfigMgr->LoadMore(cfg_def_file.c_str());
-
-            sConfigMgr->LoadMore(cfg_file.c_str());
-        }
-    }
-};
-
-
 void AddLoginChatScripts() {
     new LoginChat();
-    new login_chat_conf();
 }
 
