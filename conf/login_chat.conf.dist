@@ -1,9 +1,9 @@
 [worldserver]
 
 #
-# The world and ID attributes can be found in the 'channels' table
-# in the characters database.  You may need to creatue the channel in-game
-# to make it available in this table.
+# world 和 ID 属性可以在 'channels' 表中找到
+# 在角色数据库中。 您可能需要在游戏中创建频道
+# 使其在此表中可用。
 #
 
 LoginChat.enabled=true
